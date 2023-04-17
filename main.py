@@ -1,3 +1,6 @@
+import encodings
+import json
+import random
 import re
 from flask import Flask, jsonify
 import time
@@ -9,8 +12,10 @@ from classs import news
 
 pd.set_option('display.max_colwidth', 500)
 api_key = "AIzaSyAKY_4kNJ0xHBgVCE6k9ZgSX-njXno1BTQ"
-API_URL = "https://api-inference.huggingface.co/models/CAMeL-Lab/bert-base-arabic-camelbert-msa-ner"
-headers = {"Authorization": "Bearer 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"}
+# API_URL = "https://api-inference.huggingface.co/models/CAMeL-Lab/bert-base-arabic-camelbert-msa-ner"
+# headers = {"Authorization": "Bearer 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"}
+API_URL = "https://api-inference.huggingface.co/models/hatmimoha/arabic-ner"
+headers = {"Authorization": "Bearer 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"}
 
 app = Flask(__name__)
 
@@ -68,17 +73,19 @@ def index():
             viewport = geometry["viewport"]
             southwest = viewport["southwest"]
             northeast = viewport["northeast"]
-            boundary_coordinates = [(southwest["lat"], southwest["lng"]), (northeast["lat"], northeast["lng"])]
+            boundary_coordinates = [(northeast["lat"], southwest["lng"]), (northeast["lat"], northeast["lng"]),
+                                    (southwest["lat"], northeast["lng"]), (southwest["lat"], southwest["lng"])]
         else:
             southwest = bounds["southwest"]
             northeast = bounds["northeast"]
-            boundary_coordinates = [(southwest["lat"], southwest["lng"]), (northeast["lat"], northeast["lng"]),
-                                    (northeast["lat"], southwest["lng"]), (southwest["lat"], northeast["lng"])]
+            boundary_coordinates = [(northeast["lat"], southwest["lng"]), (northeast["lat"], northeast["lng"]),
+                                    (southwest["lat"], northeast["lng"]), (southwest["lat"], southwest["lng"])]
         return boundary_coordinates
 
     def GetDataAndDescription(payload):
         response = requests.post(API_URL, headers=headers, json=payload)
         estimatedTime = 0.0
+        # print(response['estimated_time'])
         if 'estimated_time' in response.json():
             estimatedTime = response['estimated_time']
             print(estimatedTime)
@@ -285,8 +292,8 @@ def index():
 
                 for item in response:
                     if isinstance(item, dict) and 'entity_group' in item:
-                        if item['entity_group'] == 'LOC':
-                            if item['word'] not in theLocation and '#' not in item['word'] and item['word'] not in countryList and item['word'] not in provinces and item['score'] >=0.80:
+                        if item['entity_group'] == 'LOCATION':
+                            if item['word'] not in theLocation and '#' not in item['word'] and item['word'] not in countryList and item['word'] not in provinces and item['score'] >=0.80 and 'جر' not in item['word']:
                                 theLocation = theLocation + item['word'] + ","  # append the extracted locations
 
 
@@ -298,8 +305,8 @@ def index():
 
     print("request received")
     # start of the code
-    the_word = ["الأعاصير", "إطلاق نار", "زلزال", "حوادث", "زلازل", "حريق", "إرهاب", "الجرائم", "وفاتان",
-                "حرب", "إصابات", "بانفجار", "حادث", "إغلاق طريق"]
+    the_word = ["الأعاصير", "إطلاق نار", "زلزال", "حوادث", "زلازل", "حريق", "إرهاب", "الجرائم", "التطورات",
+                "حرب", "إصابات", "بانفجار", "حادث", "إغلاق طريق","فاجعة","ذهبت","الأهلي"]
     Feed = feedparser.parse('https://www.royanews.tv/rss')  # connect to royas rss
 
     DataList = []  # the list that will have the initial data of object news
@@ -316,7 +323,7 @@ def index():
         title = t.split("value")[1]
         title = title.split("}")[0]
         title = title.split("'")[2]
-
+        print(title)
         DataList.append(news(title, links))  # add the title and link to a new news object
 
     for data in DataList:
@@ -342,8 +349,20 @@ def index():
         #         newsObject.SetPoints(get_boundary_coordinates(location))  # extract the coordinates of the location word
         theJsonlist.append(newsObject.getIntoList())  # turn the objects of news into a json list
         # print(theJsonlist)
+    n=news("test","ttt")
+    n.SetPoints([(31.80420856281328, 35.93924239243781),(31.79873072569502, 35.928608576755565),(31.793685584020597, 35.93283729637047),(31.798168869130702, 35.94312281493864)])
+    n.Setdescription("testing shit")
+    n.SetLocation("ghazi")
+    n.SettimeStamp(time.strftime("%m/%d/%Y, %H:%M:%S", time.localtime()))
+    theJsonlist.append(n.getIntoList())
+     n=news("sts","ttt")
+    n.SetPoints([(31.965658953451776, 35.85904437685731),(31.963310350005493, 35.84932450234711),(31.951467134021982, 35.85475055818648),(31.95673957387863, 35.86761217335961)])
+    n.Setdescription("testing sts")
+    n.SetLocation("sts")
+    n.SettimeStamp(time.strftime("%m/%d/%Y, %H:%M:%S", time.localtime()))
+    theJsonlist.append(n.getIntoList())
     return jsonify(theJsonlist)
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
