@@ -1,6 +1,3 @@
-import encodings
-import json
-import random
 import re
 from flask import Flask, jsonify
 import time
