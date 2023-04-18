@@ -1,3 +1,4 @@
+
 import re
 from flask import Flask, jsonify
 import time
@@ -337,14 +338,10 @@ def index():
     for newsObject in ImportnatnList:
         locations = newsObject.Getlocation()  # gets the location of the news
 
-        newsObject.SetPoints(get_boundary_coordinates(locations))
-        # if locations != "":
-        #     locations = locations.split(',')  # the data is like amman,zaraqa,psut, so it splits the locations
-        #     locations = list(dict.fromkeys(locations))
-        #     locations.remove('')
-        #     for location in locations:
-        #         newsObject.SetPoints(get_boundary_coordinates(location))  # extract the coordinates of the location word
-        theJsonlist.append(newsObject.getIntoList())  # turn the objects of news into a json list
+        boundary=get_boundary_coordinates(locations)
+        if boundary != None:
+            newsObject.SetPoints(boundary)
+            theJsonlist.append(newsObject.getIntoList())  # turn the objects of news into a json list
         # print(theJsonlist)
     n=news("test","ttt")
     n.SetPoints([(31.80420856281328, 35.93924239243781),(31.79873072569502, 35.928608576755565),(31.793685584020597, 35.93283729637047),(31.798168869130702, 35.94312281493864)])
@@ -364,4 +361,4 @@ def index():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True,host="0.0.0.0")

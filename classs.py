@@ -29,6 +29,8 @@ class news:
         }
     def SetPoints(self,pointss):
         self.points=pointss
+    def GetPoints(self):
+        return self.points
     def GetTitle(self):
         return str(self.title)
 
