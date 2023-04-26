@@ -1,4 +1,3 @@
-
 import re
 from flask import Flask, jsonify
 import time
@@ -38,7 +37,7 @@ def index():
                 target_section_contents = "\n".join(
                     [line.strip() for line in target_section_contents.split("\n") if "اقرأ أيضاً" not in line.strip()])
                 target_section_contents = re.sub(r'\n{2,}', '\n', target_section_contents)
-                target_section_contents = re.sub(r',','',target_section_contents)
+                target_section_contents = re.sub(r',', '', target_section_contents)
                 newsObjectData.Setdescription(target_section_contents)  # sets the description of the news object
 
         ExtractLocation(important_list)  # calls the extract location to extract the location from the description
@@ -89,9 +88,6 @@ def index():
         if 'estimated_time' in response.text:
             estimatedTime = response.json()['estimated_time']
             print(estimatedTime)
-        else:
-            print("No est")
-            print(response.json())
 
         if estimatedTime > 0:
             time.sleep(estimatedTime)
@@ -323,7 +319,7 @@ def index():
         title = t.split("value")[1]
         title = title.split("}")[0]
         title = title.split("'")[2]
-        print(title)
+        # print(title)
         DataList.append(news(title, links))  # add the title and link to a new news object
 
     for data in DataList:
@@ -347,7 +343,7 @@ def index():
         # print(theJsonlist)
     n=news("test","ttt")
     n.SetPoints([(31.80420856281328, 35.93924239243781),(31.79873072569502, 35.928608576755565),(31.793685584020597, 35.93283729637047),(31.798168869130702, 35.94312281493864)])
-    n.Setdescription("testing shit")
+    n.Setdescription("testing news ")
     n.SetLocation("ghazi")
     n.SettimeStamp(time.strftime("%m/%d/%Y, %H:%M:%S", time.localtime()))
     theJsonlist.append(n.getIntoList())
@@ -357,6 +353,12 @@ def index():
                  (31.95345313335726, 35.85228712261548), (31.95595739630031, 35.86598215583845)])
     n.Setdescription("testing Sts")
     n.SetLocation("Sts")
+    n.SettimeStamp(time.strftime("%m/%d/%Y, %H:%M:%S", time.localtime()))
+    theJsonlist.append(n.getIntoList())
+    n = news("جامعة الأميرة سمية للتكنولوجيا", "ttt")
+    n.SetPoints([(32.02360409210125, 35.87623861433755)])
+    n.Setdescription("تأسست الجامعة عام 1991 باسم كلية الأميرة سمية الجامعية للتكنولوجيا، وكانت تمنح درجة البكالوريوس في علم الحاسبات الإلكترونية. وهي الذراع الأكاديمي للجمعية العلمية الملكية التي أسست الجامعة. وفي عام 1992، قام جلالة المغفور له الملك الحسين بن طلال بافتتاح الجامعة رسميّاً. وفي عام 1995، تم تخريج الفوج الأول من طلبة الجامعة وعددهم 72 طالباً وطالبة. وفي عام 1994، وضع حجر الأساس لكلية الملك عبد الله الثاني للهندسة الكهربائية، التي كانت تمنح آنذاك درجة البكالوريوس في الهندسة الإلكترونية. وفي عام 2002، تم اعتماد المسمى الجديد للجامعة وهو جامعة الأميرة سمية للتكنولوجيا، بالإضافة إلى استحداث تخصص جديد هو هندسة الحاسوب. توسعت الجامعة عام 2005، باستحداث تخصصات جديدة هي: هندسة الاتصالات، ونظم المعلومات الإدارية، وعلم الرسم الحاسوبي وهو الأول من نوعه في الأردن. أقرت وزارة التعليم العالي والبحث العلمي عام 2007 أنظمة الجامعة وتعليماتها، وأصبحت نموذجاً للجامعات الخاصة في الأردن. تم في عام 2007، طرح برنامج ماجستير علم الحاسوب، تلاه برنامج ماجستير تكنولوجيا البيئة وإدارتها عام 2008، ثم برنامج ماجستير إدارة الأعمال الدولية عام 2008، بالتعاون مع جامعة لانكستر/ بريطانيا.")
+    n.SetLocation("جامعة الأميرة سمية")
     n.SettimeStamp(time.strftime("%m/%d/%Y, %H:%M:%S", time.localtime()))
     theJsonlist.append(n.getIntoList())
     return jsonify(theJsonlist)
