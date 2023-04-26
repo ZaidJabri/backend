@@ -87,7 +87,7 @@ def index():
 
         # print(response['estimated_time'])
         if 'estimated_time' in response.text:
-            estimatedTime = response['estimated_time']
+            estimatedTime = response.json()['estimated_time']
             print(estimatedTime)
         else:
             print("No est")
