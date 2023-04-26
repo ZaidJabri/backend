@@ -83,8 +83,10 @@ def index():
     def GetDataAndDescription(payload):
         response = requests.post(API_URL, headers=headers, json=payload)
         estimatedTime = 0.0
+        print(response.text)
+
         # print(response['estimated_time'])
-        if 'estimated_time' in response.json():
+        if 'estimated_time' in response.text:
             estimatedTime = response['estimated_time']
             print(estimatedTime)
         else:
@@ -345,7 +347,7 @@ def index():
         # print(theJsonlist)
     n=news("test","ttt")
     n.SetPoints([(31.80420856281328, 35.93924239243781),(31.79873072569502, 35.928608576755565),(31.793685584020597, 35.93283729637047),(31.798168869130702, 35.94312281493864)])
-    n.Setdescription("testing big des asdkjasjhdjkashkjdhashjkdasjhkdghjasgjdhgasjdasdasd as das das sad as as dasjdashjdb hsabhdjbashjdbhjsad ashd bhjas djasbdbas bhjkdhasbhdhjkasgdhjasgyhjdgyhjasgduyhsayhudf sa dfn asdfg das f ads f asd df ads f dasfasdfasdfadsf ads f asd f asd f asd fasd  f asd fa sd ffdas")
+    n.Setdescription("testing shit")
     n.SetLocation("ghazi")
     n.SettimeStamp(time.strftime("%m/%d/%Y, %H:%M:%S", time.localtime()))
     theJsonlist.append(n.getIntoList())
