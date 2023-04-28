@@ -1,4 +1,3 @@
-import random
 import time
 
 
@@ -10,27 +9,44 @@ class news:
         self.description = ""
         self.location = ""
         self.timeStamp = time.strftime("%m/%d/%Y, %H:%M:%S", time.localtime())
-        self.points=[]
+        self.points = []
+
     def __str__(self):
         return "the title is :" + self.title + ",\n the link is:" + self.link + "\n the Description\n" + self.description + "\n the loc:" + self.location + "\n the time:" + self.timeStamp
 
     def __eq__(self, other):
-        if isinstance(other,self.__class__):
+        if isinstance(other, self.__class__):
             return self.title == other.title
         return False
+
+    def arabic_text_to_small_sum(self, arabic_text, modulus=100):
+        # Use the ord() function to get the Unicode code point of each character in the Arabic text string
+        code_points = [ord(c) for c in arabic_text]
+
+        # Compute the sum of the code points
+        total_sum = sum(code_points)
+
+        # Take the modulo of the sum with a smaller number
+        small_sum = total_sum % modulus
+
+        return small_sum
+
     def getIntoList(self):
         return {
-        "id": 'id'+str(random.randrange(1,99999999)),
-        "title": self.title,
-        "Coordinates": self.points,
-        "Locations":self.location,
-        "timeStamp": self.timeStamp,
-        "description": self.description
+            "id": self.arabic_text_to_small_sum(self.title),
+            "title": self.title,
+            "description": self.description,
+            "Coordinates": self.points,
+            "Locations": self.location,
+            "timeStamp": self.timeStamp
         }
-    def SetPoints(self,pointss):
-        self.points=pointss
+
+    def SetPoints(self, pointss):
+        self.points = pointss
+
     def GetPoints(self):
         return self.points
+
     def GetTitle(self):
         return str(self.title)
 
