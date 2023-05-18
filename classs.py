@@ -4,6 +4,7 @@ import time
 class news:
 
     def __init__(self, title, link):
+        self.id=''
         self.title = title
         self.link = link
         self.description = ""
@@ -19,7 +20,7 @@ class news:
             return self.title == other.title
         return False
 
-    def arabic_text_to_small_sum(self, arabic_text, modulus=100):
+    def arabic_text_to_small_sum(self, arabic_text, modulus=1000):
         # Use the ord() function to get the Unicode code point of each character in the Arabic text string
         code_points = [ord(c) for c in arabic_text]
 
@@ -28,12 +29,13 @@ class news:
 
         # Take the modulo of the sum with a smaller number
         small_sum = total_sum % modulus
-
-        return small_sum
+        if self.id != 1 or self.id != 2:
+            self.id = small_sum
 
     def getIntoList(self):
+        self.arabic_text_to_small_sum(self.title)
         return {
-            "id": self.arabic_text_to_small_sum(self.title),
+            "id": self.id,
             "title": self.title,
             "description": self.description,
             "Coordinates": self.points,
