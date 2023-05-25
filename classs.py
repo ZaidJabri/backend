@@ -1,16 +1,30 @@
-import time
+from datetime import datetime
 
 
 class news:
 
-    def __init__(self, title, link):
-        self.id=''
+    def __init__(self, title, link, source, time):
+
+        self.id = ''
         self.title = title
         self.link = link
         self.description = ""
         self.location = ""
-        self.timeStamp = time.strftime("%m/%d/%Y, %H:%M:%S", time.localtime())
+        self.timeStamp = self.format_date(time)
         self.points = []
+        self.newsSource = source
+
+    def format_date(self, unformated_date):
+
+        try:
+            if datetime.strptime(unformated_date, "%Y-%m-%dT%H:%M:%S%z"):
+                parsed_date = datetime.strptime(unformated_date, "%Y-%m-%dT%H:%M:%S%z")
+                formatted_date = parsed_date.strftime("%m/%d/%Y, %H:%M:%S")
+        except ValueError:
+            date_object = datetime.strptime(unformated_date, "%a, %d %b %Y %H:%M:%S %Z")
+            formatted_date = date_object.strftime("%m/%d/%Y, %H:%M:%S")
+
+        return formatted_date
 
     def __str__(self):
         return "the title is :" + self.title + ",\n the link is:" + self.link + "\n the Description\n" + self.description + "\n the loc:" + self.location + "\n the time:" + self.timeStamp
@@ -32,7 +46,10 @@ class news:
         if self.id != 1 or self.id != 2:
             self.id = small_sum
 
-    def getIntoList(self):
+    def get_source(self):
+        return self.newsSource
+
+    def to_dict(self):
         self.arabic_text_to_small_sum(self.title)
         return {
             "id": self.id,
@@ -40,35 +57,39 @@ class news:
             "description": self.description,
             "Coordinates": self.points,
             "Locations": self.location,
-            "timeStamp": self.timeStamp
+            "timeStamp": self.timeStamp,
+            "newsSource": self.newsSource
         }
 
-    def SetPoints(self, pointss):
-        self.points = pointss
+    def set_points(self, updated_points):
+        self.points = updated_points
 
-    def GetPoints(self):
+    def get_points(self):
         return self.points
 
-    def GetTitle(self):
+    def get_title(self):
         return str(self.title)
 
-    def GetLink(self):
+    def get_link(self):
         return str(self.link)
 
-    def Getlocation(self):
+    def get_location(self):
         return str(self.location)
 
     def SetLocation(self, Loc):
         self.location = Loc
 
-    def GettimeStamp(self):
+    def add_location(self, location):
+        self.location = self.location + location + ","
+
+    def get_timestamp(self):
         return str(self.timeStamp)
 
-    def SettimeStamp(self, timestamp):
+    def set_timestamp(self, timestamp):
         self.timeStamp = timestamp
 
-    def Setdescription(self, description):
+    def set_description(self, description):
         self.description = description
 
-    def Getdescription(self):
+    def get_description(self):
         return str(self.description)
