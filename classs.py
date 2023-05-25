@@ -1,33 +1,34 @@
 from datetime import datetime
 
 
-class news:
+class News:
 
     def __init__(self, title, link, source, time):
-
         self.id = ''
         self.title = title
         self.link = link
         self.description = ""
         self.location = ""
+        self.newsSource = source
         self.timeStamp = self.format_date(time)
         self.points = []
-        self.newsSource = source
 
-    def format_date(self, unformated_date):
-
-        try:
-            if datetime.strptime(unformated_date, "%Y-%m-%dT%H:%M:%S%z"):
-                parsed_date = datetime.strptime(unformated_date, "%Y-%m-%dT%H:%M:%S%z")
-                formatted_date = parsed_date.strftime("%m/%d/%Y, %H:%M:%S")
-        except ValueError:
-            date_object = datetime.strptime(unformated_date, "%a, %d %b %Y %H:%M:%S %Z")
+    def format_date(self, unformatted_date):
+        formatted_date = ""
+        if self.newsSource == 'roya':
+            parsed_date = datetime.strptime(unformatted_date, "%Y-%m-%dT%H:%M:%S%z")
+            formatted_date = parsed_date.strftime("%m/%d/%Y, %H:%M:%S")
+        elif self.newsSource == 'alghad':
+            date_object = datetime.strptime(unformatted_date, "%a, %d %b %Y %H:%M:%S %Z")
             formatted_date = date_object.strftime("%m/%d/%Y, %H:%M:%S")
+        if formatted_date == "":
+            formatted_date = unformatted_date
 
         return formatted_date
 
     def __str__(self):
-        return "the title is :" + self.title + ",\n the link is:" + self.link + "\n the Description\n" + self.description + "\n the loc:" + self.location + "\n the time:" + self.timeStamp
+        return "the title is :" + self.title + ",\n the link is:" + self.link + "\n the Description\n" + \
+               self.description + "\n the loc:" + self.location + "\n the time:" + self.timeStamp
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -76,8 +77,8 @@ class news:
     def get_location(self):
         return str(self.location)
 
-    def SetLocation(self, Loc):
-        self.location = Loc
+    def set_location(self, location):
+        self.location = location
 
     def add_location(self, location):
         self.location = self.location + location + ","
