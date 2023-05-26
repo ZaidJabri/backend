@@ -50,7 +50,7 @@ class News:
     def get_source(self):
         return self.newsSource
 
-    def to_dict(self):
+    def to_dictionary(self):
         self.arabic_text_to_small_sum(self.title)
         return {
             "id": self.id,
