@@ -148,6 +148,14 @@ def index():
             if boundary is not None:
                 news_object.set_points(boundary)
                 the_json_list.append(news_object.to_dictionary())
+    n = News("test", "ttt",'roya', '2020-06-20T12:00:00+00:00')
+    n.id=1
+    n.set_points([(31.80420856281328, 35.93924239243781), (31.79873072569502, 35.928608576755565),
+                 (31.793685584020597, 35.93283729637047), (31.798168869130702, 35.94312281493864)])
+    n.set_description("testing news for zaid ")
+    n.set_location("ghazi")
+    n.set_timestamp(time.strftime("%m/%d/%Y, %H:%M:%S", time.localtime()))
+    the_json_list.append(n.getIntoList())           
     n = News("جامعة الأميرة سمية للتكنولوجيا", "ttt", 'roya', '2020-06-20T12:00:00+00:00')
     n.id = 3
     n.set_points([(32.02360409210125, 35.87623861433755)])
