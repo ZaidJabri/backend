@@ -39,30 +39,38 @@ def index():
 
         extract_location(news_list)
 
-    def get_boundary_coordinates(place_name):
-        if place_name == "":
-            return None
+   def get_boundary_coordinates(place_name):
+    """
+    Retrieves the boundary coordinates for a given place name using the Google Geocoding API.
+    """
 
-        geocode_url = f"https://maps.googleapis.com/maps/api/geocode/json?address={place_name}&key={api_key}"
-        response = requests.get(geocode_url)
-        response_json = response.json()
-        results = response_json["results"]
-        if len(results) == 0:
-            return None
-        result = results[0]
-        geometry = result["geometry"]
-        bounds = geometry.get("bounds")
-        if bounds is None:
-            viewport = geometry["viewport"]
-            southwest = viewport["southwest"]
-            northeast = viewport["northeast"]
-            boundary_coordinates = [(northeast["lat"], southwest["lng"]), (northeast["lat"], northeast["lng"]),
-                                    (southwest["lat"], northeast["lng"]), (southwest["lat"], southwest["lng"])]
-        else:
-            southwest = bounds["southwest"]
-            northeast = bounds["northeast"]
-            boundary_coordinates = [(northeast["lat"], southwest["lng"]), (northeast["lat"], northeast["lng"]),
-                                    (southwest["lat"], northeast["lng"]), (southwest["lat"], southwest["lng"])]
+    if place_name == "":
+        return None
+
+    geocode_url = f"https://maps.googleapis.com/maps/api/geocode/json?address={place_name}&key={api_key}"
+    response = requests.get(geocode_url, timeout=3000)
+    response_json = response.json()
+    results = response_json["results"]
+
+    if len(results) == 0:
+        return None
+
+    result = results[0]
+    geometry = result["geometry"]
+    location = geometry["location"]
+    bounds = geometry.get("bounds")
+
+    if bounds is None:
+        # Return the single coordinate point
+        print(location)
+        return [(location["lat"], location["lng"])]
+    else:
+        viewport = geometry["viewport"]
+        southwest = viewport["southwest"]
+        northeast = viewport["northeast"]
+        boundary_coordinates = [(northeast["lat"], southwest["lng"]), (northeast["lat"], northeast["lng"]),
+                                (southwest["lat"], northeast["lng"]), (southwest["lat"], southwest["lng"])]
+        print(boundary_coordinates)
         return boundary_coordinates
 
     def get_data_and_description(payload):
