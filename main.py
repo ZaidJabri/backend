@@ -5,7 +5,7 @@ import requests
 import re
 import pandas as pd
 import feedparser
-from classs import News
+from News import News
 import concurrent.futures
 
 pd.set_option('display.max_colwidth', 500)
@@ -18,6 +18,41 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
+    
+    def get_boundary_coordinates(place_name):
+        """
+        Retrieves the boundary coordinates for a given place name using the Google Geocoding API.
+        """
+
+        if place_name == "":
+            return None
+
+        geocode_url = f"https://maps.googleapis.com/maps/api/geocode/json?address={place_name}&key={api_key}"
+        response = requests.get(geocode_url, timeout=3000)
+        response_json = response.json()
+        results = response_json["results"]
+
+        if len(results) == 0:
+            return None
+
+        result = results[0]
+        geometry = result["geometry"]
+        location = geometry["location"]
+        bounds = geometry.get("bounds")
+
+        if bounds is None:
+            # Return the single coordinate point
+            print(location)
+            return [(location["lat"], location["lng"])]
+        else:
+            viewport = geometry["viewport"]
+            southwest = viewport["southwest"]
+            northeast = viewport["northeast"]
+            boundary_coordinates = [(northeast["lat"], southwest["lng"]), (northeast["lat"], northeast["lng"]),
+                                    (southwest["lat"], northeast["lng"]), (southwest["lat"], southwest["lng"])]
+            print(boundary_coordinates)
+            return boundary_coordinates
+
     def extract(news_list):
         for news_data in news_list:
             url = news_data.get_link()
@@ -36,42 +71,7 @@ def index():
                     [line.strip() for line in article_section.split("\n") if "اقرأ أيضاً" not in line.strip()])
                 article_section = re.sub(r'\s+', ' ', article_section)
                 news_data.set_description(article_section)
-
         extract_location(news_list)
-
-   def get_boundary_coordinates(place_name):
-    """
-    Retrieves the boundary coordinates for a given place name using the Google Geocoding API.
-    """
-
-    if place_name == "":
-        return None
-
-    geocode_url = f"https://maps.googleapis.com/maps/api/geocode/json?address={place_name}&key={api_key}"
-    response = requests.get(geocode_url, timeout=3000)
-    response_json = response.json()
-    results = response_json["results"]
-
-    if len(results) == 0:
-        return None
-
-    result = results[0]
-    geometry = result["geometry"]
-    location = geometry["location"]
-    bounds = geometry.get("bounds")
-
-    if bounds is None:
-        # Return the single coordinate point
-        print(location)
-        return [(location["lat"], location["lng"])]
-    else:
-        viewport = geometry["viewport"]
-        southwest = viewport["southwest"]
-        northeast = viewport["northeast"]
-        boundary_coordinates = [(northeast["lat"], southwest["lng"]), (northeast["lat"], northeast["lng"]),
-                                (southwest["lat"], northeast["lng"]), (southwest["lat"], southwest["lng"])]
-        print(boundary_coordinates)
-        return boundary_coordinates
 
     def get_data_and_description(payload):
         response = requests.post(API_URL, headers=headers, json=payload)
