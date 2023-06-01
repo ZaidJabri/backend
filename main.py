@@ -18,7 +18,6 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    
     def get_boundary_coordinates(place_name):
         """
         Retrieves the boundary coordinates for a given place name using the Google Geocoding API.
@@ -156,14 +155,44 @@ def index():
             if boundary is not None:
                 news_object.set_points(boundary)
                 the_json_list.append(news_object.to_dictionary())
-    n = News("test", "ttt",'roya', '2020-06-20T12:00:00+00:00')
-    n.id=1
+    n = News("test", "ttt", 'roya', '2020-06-20T12:00:00+00:00')
+    n.id = 1
     n.set_points([(31.80420856281328, 35.93924239243781), (31.79873072569502, 35.928608576755565),
-                 (31.793685584020597, 35.93283729637047), (31.798168869130702, 35.94312281493864)])
+                  (31.793685584020597, 35.93283729637047), (31.798168869130702, 35.94312281493864)])
     n.set_description("testing news for zaid ")
     n.set_location("ghazi")
     n.set_timestamp(time.strftime("%m/%d/%Y, %H:%M:%S", time.localtime()))
-    the_json_list.append(n.to_dictionary())           
+    the_json_list.append(n.to_dictionary())
+    n = News("t1", "ttt", 'roya', '2020-06-20T12:00:00+00:00')
+    n.id = 12
+    n.set_points([(31.908709199196878, 35.86460066505852), (31.905926340099864, 35.86996509881537),
+                  (31.90318375673667, 35.86649807419722), (31.906260795887317, 35.86154705793928)])
+    n.set_description("testing news for issa ")
+    n.set_location("ghazi")
+    n.set_timestamp(time.strftime("%m/%d/%Y, %H:%M:%S", time.localtime()))
+    the_json_list.append(n.to_dictionary())
+    n = News("t2", "ttt", 'roya', '2020-06-20T12:00:00+00:00')
+    n.id = 19
+    n.set_points([(31.906181429198234, 35.866832293687814)])
+    n.set_description("testing news for issa ")
+    n.set_location("ghazi")
+    n.set_timestamp(time.strftime("%m/%d/%Y, %H:%M:%S", time.localtime()))
+    the_json_list.append(n.to_dictionary())
+    n = News("t3", "ttt", 'roya', '2020-06-20T12:00:00+00:00')
+    n.id = 88
+    n.set_points([(31.9071986213631, 35.86566611909778)])
+    n.set_description("testing news for issa ")
+    n.set_location("ghazi")
+    n.set_timestamp(time.strftime("%m/%d/%Y, %H:%M:%S", time.localtime()))
+    the_json_list.append(n.to_dictionary())
+    n = News("t4", "ttt", 'roya', '2020-06-20T12:00:00+00:00')
+    n.id = 83
+    n.set_points([(31.911177484211002, 35.86129809534054), (31.90841876917848, 35.86751099463854),
+                  (31.905751011534086, 35.86335920024101), (31.908631317563408, 35.858702648400275)])
+    n.set_description("testing news for issa ")
+    n.set_location("ghazi")
+    n.set_timestamp(time.strftime("%m/%d/%Y, %H:%M:%S", time.localtime()))
+    the_json_list.append(n.to_dictionary())
     n = News("جامعة الأميرة سمية للتكنولوجيا", "ttt", 'roya', '2020-06-20T12:00:00+00:00')
     n.id = 3
     n.set_points([(32.02360409210125, 35.87623861433755)])
@@ -172,6 +201,7 @@ def index():
     n.set_location("جامعة الأميرة سمية")
     n.set_timestamp(time.strftime("%m/%d/%Y, %H:%M:%S", time.localtime()))
     the_json_list.append(n.to_dictionary())
+
     return jsonify(the_json_list)
 
 
