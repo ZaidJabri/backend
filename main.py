@@ -120,7 +120,7 @@ def index():
                                 item['word'] not in news_data.get_location() and \
                                 '#' not in item['word'] and \
                                 item['word'] not in country_list and \
-                                item['word'] not in provinces and item['score'] >= 0.80:
+                                item['word'] not in provinces and item['score'] >= 0.90:
                             news_data.add_location(item['word'])
 
     print("Request received")
